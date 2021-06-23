@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chart.js Basic APP</title>
+    <!--Chart.js CDN-->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+    <!--Chart.js CDN-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css">
+</head>
+
+<body>
+    <div class="container mt-5">
+        <h1 style="font-family: Verdana, Geneva, Tahoma, sans-serif; font-size: 16px; margin-left: 30px;">Global Average Temperatures 1880-2018 , datas by NASA</h1>
+        <canvas id="myChart" width="250px" height="100px"></canvas>
+    </div>
+
+</body>
+<script>
+    window.addEventListener('load', setup);
+
+    async function setup() {
+        const ctx = document.getElementById('myChart').getContext('2d');
+        const globalTemps = await getAllDatasFromCSVFile();
+        const myChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: globalTemps.allYears,
+                datasets: [{
+                    label: 'Temperature',
+                    data: globalTemps.temperatures,
+                    fill: false,
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                    borderWidth: 1,
+                    pointStyle: 'Stars',
+                    pointRadius: 6,
+                }],
+            },
+        });
+    }
+    async function getAllDatasFromCSVFile() {
+
+        const resp = await fetch('datas.csv');
+        const datas = await resp.text();
+
+        const allYears = [];
+        const temperatures = [];
+        const myDataTable = datas.split("\n").slice(1);
+
+        myDataTable.forEach(element => {
+            const allColumns = element.split(',');
+
+            allYears.push(allColumns[0]);
+            temperatures.push(allColumns[1]);
+        });
+
+        return {
+            allYears,
+            temperatures
+        }
+    }
+</script>
+
+</html>
