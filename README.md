@@ -1,5 +1,5 @@
 # chart.js-app
-Basic Chart.js application from application
+Basic Chart.js application
 
 
 An image
